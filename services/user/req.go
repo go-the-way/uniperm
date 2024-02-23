@@ -12,6 +12,7 @@
 package user
 
 import (
+	"github.com/rwscode/uniperm/models"
 	"github.com/rwscode/uniperm/services/base"
 )
 
@@ -43,9 +44,9 @@ type (
 		Id uint `validate:"min(1,用户id不能为空)" json:"id"`
 	}
 	GetReq           IdReq
-	GetPermReq       struct{ GetUserFunc }
+	GetPermReq       = models.User
 	GetPermButtonReq struct {
-		GetUserFunc
+		models.User
 		Id uint `validate:"min(1,权限id不能为空)" form:"id"`
 	}
 	AddReq struct {
@@ -54,7 +55,7 @@ type (
 		BusinessId1 string `validate:"maxlength(50,业务id1长度不能超过50)" json:"business_id1"`                // 业务id1
 		BusinessId2 string `validate:"maxlength(50,业务id2长度不能超过50)" json:"business_id2"`                // 业务id2
 		BusinessId3 string `validate:"maxlength(50,业务id3长度不能超过50)" json:"business_id3"`                // 业务id3
-		RoleId      uint   `validate:"min(1,角色id不能为空)" json:"role_id"`                                 // 角色id
+		RoleId      uint   `json:"role_id"`                                                            // 角色id
 		Remark1     string `validate:"maxlength(200,备注1长度不能超过200)" json:"remark1"`                     // 备注1
 		Remark2     string `validate:"maxlength(200,备注2长度不能超过200)" json:"remark2"`                     // 备注2
 		Remark3     string `validate:"maxlength(200,备注3长度不能超过200)" json:"remark3"`                     // 备注3
@@ -84,8 +85,16 @@ type (
 		Username string `validate:"minlength(1,用户名不能为空) maxlength(20,用户名长度不能超过20)" json:"username"`
 		Password string `validate:"minlength(1,密码不能为空) maxlength(20,密码长度不能超过20)" json:"password"`
 		ClientIp string `validate:"maxlength(20,客户端ip长度不能超过20)" json:"client_ip"`
+		Callback struct {
+			NotFound      func()
+			Disabled      func(user models.User)
+			RoleDisabled  func(user models.User)
+			PasswordWrong func(user models.User)
+			Success       func(user models.User, resp *LoginResp)
+		}
 	}
 	LogoutReq struct {
-		Token string `validate:"minlength(1,token不能为空)" form:"token" json:"token"`
+		Token    string `validate:"minlength(1,token不能为空)" form:"token" json:"token"`
+		Callback func(req LogoutReq) (err error)
 	}
 )

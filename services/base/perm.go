@@ -18,24 +18,28 @@ import (
 
 type (
 	TreeResp struct {
-		List []*TreeRespPerm `json:"list"`
+		List []TreeRespPerm `json:"list"`
 	}
 	TreeRespPerm struct {
-		perm     *models.Permission `json:"-"`
-		Children []*TreeRespPerm    `json:"children"`
-		Check    string             `json:"check"`
+		models.Permission
+		Children []TreeRespPerm `json:"children,omitempty"`
+		Check    string         `json:"check"`
 	}
 )
 
-func PermTree(checkedMap map[uint]struct{}) (resp TreeResp, err error) {
-	var perms []*models.Permission
+func PermTree(permissionId []uint) (resp TreeResp, err error) {
+	var checkedMap = map[uint]struct{}{}
+	for _, perm := range permissionId {
+		checkedMap[perm] = struct{}{}
+	}
+	var perms []models.Permission
 	if err = db.GetDb().Model(&models.Permission{}).Find(&perms).Error; err != nil {
 		return
 	}
-	resp.List = make([]*TreeRespPerm, 0)
+	resp.List = make([]TreeRespPerm, 0)
 	for _, perm := range perms {
 		if perm.ParentId == 0 {
-			resp.List = append(resp.List, &TreeRespPerm{perm, children(perm.Id, checkedMap, perms), getChecked(checkedMap, perm.Id)})
+			resp.List = append(resp.List, TreeRespPerm{perm, children(perm.Id, checkedMap, perms), getChecked(checkedMap, perm.Id)})
 		}
 	}
 	return
@@ -48,11 +52,11 @@ func getChecked(checkedMap map[uint]struct{}, permissionId uint) string {
 	return "false"
 }
 
-func children(parentId uint, checkedMap map[uint]struct{}, perms []*models.Permission) []*TreeRespPerm {
-	var trpS []*TreeRespPerm
+func children(parentId uint, checkedMap map[uint]struct{}, perms []models.Permission) []TreeRespPerm {
+	var trpS []TreeRespPerm
 	for _, perm := range perms {
 		if perm.ParentId == parentId {
-			trpS = append(trpS, &TreeRespPerm{perm, children(perm.Id, checkedMap, perms), getChecked(checkedMap, perm.Id)})
+			trpS = append(trpS, TreeRespPerm{perm, children(perm.Id, checkedMap, perms), getChecked(checkedMap, perm.Id)})
 		}
 	}
 	return trpS

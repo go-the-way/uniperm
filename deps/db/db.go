@@ -12,6 +12,7 @@
 package db
 
 import (
+	"github.com/rwscode/uniperm/models"
 	"gorm.io/gorm"
 )
 
@@ -29,6 +30,9 @@ func GetPagination() PaginationFunc               { return pageFunc }
 
 func AutoMigrate() (err error) {
 	return gdb.AutoMigrate(
-	// new(models.Channel),
+		new(models.User),
+		new(models.Role),
+		new(models.RolePermission),
+		new(models.Permission),
 	)
 }

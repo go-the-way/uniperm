@@ -15,6 +15,4 @@ import (
 	"github.com/rwscode/uniperm/services/base"
 )
 
-type (
-	TreeResp = base.TreeResp
-)
+type TreeResp = base.TreeResp

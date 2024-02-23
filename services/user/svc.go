@@ -11,8 +11,6 @@
 
 package user
 
-import "github.com/rwscode/uniperm/models"
-
 var (
 	Service SVC = &service{}
 
@@ -31,17 +29,6 @@ var (
 	Logout         = Service.Logout
 )
 
-type (
-	GetUserFunc   func() (user models.User)
-	LoginCallback struct {
-		NotFound      func()
-		Disabled      func(user models.User)
-		PasswordWrong func(user models.User)
-		Success       func(user models.User, resp *LoginResp)
-	}
-	LogoutCallback func(req LogoutReq) (err error)
-)
-
 type SVC interface {
 	GetPage(req GetPageReq) (resp GetPageResp, err error)
 	Get(req GetReq) (resp GetResp, err error)
@@ -54,6 +41,6 @@ type SVC interface {
 	Del(req DelReq) (err error)
 	Enable(req EnableReq) (err error)
 	Disable(req DisableReq) (err error)
-	Login(req LoginReq, callback ...LoginCallback) (resp LoginResp, err error)
-	Logout(req LogoutReq, callback ...LogoutCallback) (err error)
+	Login(req LoginReq) (resp LoginResp, err error)
+	Logout(req LogoutReq) (err error)
 }

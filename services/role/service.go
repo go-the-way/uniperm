@@ -80,11 +80,7 @@ func (s *service) GetPerm(req GetPermReq) (resp GetPermResp, err error) {
 	if err = db.GetDb().Model(new(models.RolePermission)).Where("role_id=?", req.Id).Select("permission_id").Find(&perms).Error; err != nil {
 		return
 	}
-	var checkedMap = map[uint]struct{}{}
-	for _, perm := range perms {
-		checkedMap[perm] = struct{}{}
-	}
-	return base.PermTree(checkedMap)
+	return base.PermTree(perms)
 }
 
 func (s *service) UpdatePerm(req UpdatePermReq) (err error) {

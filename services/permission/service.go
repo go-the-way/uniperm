@@ -19,7 +19,9 @@ import (
 
 type service struct{}
 
-func (s *service) Tree(req TreeReq) (resp TreeResp, err error) { return base.PermTree(req) }
+func (s *service) Tree(req TreeReq) (resp TreeResp, err error) {
+	return base.PermTree(req.PermissionId)
+}
 
 func (s *service) Add(req AddReq) error { return db.GetDb().Create(req.Transform()).Error }
 

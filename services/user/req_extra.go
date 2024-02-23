@@ -48,7 +48,7 @@ func (r *DisableReq) Check() (err error) { return (&DelReq{Id: r.Id}).Check() }
 
 func (r *AddReq) Transform() *models.User {
 	return &models.User{
-		UserName:    r.Username,
+		Username:    r.Username,
 		Password:    pkg.MD5(r.Password),
 		BusinessId1: r.BusinessId1,
 		BusinessId2: r.BusinessId2,

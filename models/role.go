@@ -18,7 +18,7 @@ type (
 		Name        string `gorm:"column:name;type:varchar(50);not null;default:'';comment:角色名称" json:"name"`                // 角色名称
 		Description string `gorm:"column:description;type:varchar(200);not null;default:'';comment:角色描述" json:"description"` // 角色描述
 		Type        string `gorm:"column:type;type:varchar(50);not null;default:'';comment:角色类型;index" json:"type"`          // 角色类型
-		State       byte   `gorm:"column:enable;type:tinyint;not null;default:1;comment:状态：1启用 2禁用;index" json:"state"`      // 状态：1启用 2禁用
+		State       byte   `gorm:"column:state;type:tinyint;not null;default:1;comment:状态：1启用 2禁用;index" json:"state"`       // 状态：1启用 2禁用
 		CreateTime  string `gorm:"column:create_time;type:varchar(20);not null;default:'';comment:创建时间" json:"create_time"`  // 创建时间
 		UpdateTime  string `gorm:"column:update_time;type:varchar(20);not null;default:'';comment:修改时间" json:"update_time"`  // 修改时间
 	}

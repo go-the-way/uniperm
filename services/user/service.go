@@ -64,8 +64,7 @@ func (s *service) Add(req AddReq) (err error) {
 }
 
 func (s *service) Update(req UpdateReq) (err error) {
-	cols := []string{"business_id1", "business_id2", "business_id3", "remark1", "remark2", "remark3", "update_time"}
-	return db.GetDb().Model(&models.User{Id: req.Id}).Select(cols).Updates(req.Transform()).Error
+	return db.GetDb().Model(&models.User{Id: req.Id}).Select("business_id1", "business_id2", "business_id3", "remark1", "remark2", "remark3", "update_time").Updates(req.Transform()).Error
 }
 
 func (s *service) UpdatePassword(req UpdatePasswordReq) (err error) {
@@ -93,14 +92,11 @@ func (s *service) updateState(id uint, state byte) (err error) {
 }
 
 func (s *service) GetPerm(req GetPermReq) (resp GetPermResp, err error) {
-	user := req.GetUserFunc()
 	var rps []models.RolePermission
-	if err = db.GetDb().Model(new(models.RolePermission)).Where("role_id=?", user.RoleId).Find(&rps).Error; err != nil {
+	if err = db.GetDb().Model(new(models.RolePermission)).Where("role_id=?", req.RoleId).Find(&rps).Error; err != nil {
 		return
 	}
-	var (
-		checkedMap = map[uint]bool{}
-	)
+	var checkedMap = map[uint]bool{}
 	for _, rp := range rps {
 		checkedMap[rp.PermissionId] = true
 	}
@@ -108,11 +104,11 @@ func (s *service) GetPerm(req GetPermReq) (resp GetPermResp, err error) {
 	if err = db.GetDb().Model(new(models.Permission)).Find(&ps).Error; err != nil {
 		return
 	}
-	resp.SuperAdmin = user.SuperAdmin()
+	resp.SuperAdmin = req.SuperAdmin()
 	resp.Routes = make([]GetPermRespRoute, 0)
 	for _, p := range ps {
-		if p.ParentId == 0 && p.IsButton == 2 && (user.Id == 1 || checkedMap[p.Id]) {
-			resp.Routes = append(resp.Routes, GetPermRespRoute{Id: p.Id, Path: p.Route, Children: s.children(p.Id, checkedMap, ps, user.SuperAdmin())})
+		if p.ParentId == 0 && p.IsButton == models.PermissionIsButtonNo && (req.SuperAdmin() || checkedMap[p.Id]) {
+			resp.Routes = append(resp.Routes, GetPermRespRoute{Id: p.Id, Path: p.Route, Children: s.children(p.Id, checkedMap, ps, req.SuperAdmin())})
 		}
 	}
 	return
@@ -129,100 +125,98 @@ func (s *service) children(parentId uint, checkedMap map[uint]bool, rps []models
 }
 
 func (s *service) GetPermButton(req GetPermButtonReq) (resp GetPermButtonResp, err error) {
-	user := req.GetUserFunc()
-	if superAdmin := user.SuperAdmin(); superAdmin {
+	if superAdmin := req.SuperAdmin(); superAdmin {
 		resp.SuperAdmin = superAdmin
 		return
 	}
-	if user.RoleId <= 0 {
+	if req.RoleId <= 0 {
 		return
 	}
 	err = db.GetDb().Raw(`
 select sp.route
-from uniperm_permission sp,
-     uniperm_permission spp,
-     uniperm_role_permission srp
+from uniperm_permissions sp,
+     uniperm_permissions spp,
+     uniperm_role_permissions srp
 where sp.id = srp.permission_id
   and sp.parent_id = spp.id
   and sp.is_button = ?
   and srp.role_id = ?
-  and spp.id = ?`, models.PermissionIsButtonYes, user.RoleId, req.Id).Find(&resp.Buttons).Error
+  and spp.id = ?`, models.PermissionIsButtonYes, req.RoleId, req.Id).Find(&resp.Buttons).Error
 	return
 }
 
-func (s *service) loginCallNotFound(loginCallback ...LoginCallback) {
-	if len(loginCallback) > 0 {
-		for _, callback := range loginCallback {
-			if fn := callback.NotFound; fn != nil {
-				fn()
-			}
-		}
+func (s *service) loginCallNotFound(req LoginReq) {
+	if fn := req.Callback.NotFound; fn != nil {
+		fn()
 	}
 }
 
-func (s *service) loginCallDisabled(user models.User, loginCallback ...LoginCallback) {
-	if len(loginCallback) > 0 {
-		for _, callback := range loginCallback {
-			if fn := callback.Disabled; fn != nil {
-				fn(user)
-			}
-		}
+func (s *service) loginCallDisabled(user models.User, req LoginReq) {
+	if fn := req.Callback.Disabled; fn != nil {
+		fn(user)
 	}
 }
 
-func (s *service) loginPasswordWrong(user models.User, loginCallback ...LoginCallback) {
-	if len(loginCallback) > 0 {
-		for _, callback := range loginCallback {
-			if fn := callback.PasswordWrong; fn != nil {
-				fn(user)
-			}
-		}
+func (s *service) loginCallRoleDisabled(user models.User, req LoginReq) {
+	if fn := req.Callback.RoleDisabled; fn != nil {
+		fn(user)
 	}
 }
 
-func (s *service) loginSuccess(user models.User, resp *LoginResp, loginCallback ...LoginCallback) {
-	if len(loginCallback) > 0 {
-		for _, callback := range loginCallback {
-			if fn := callback.Success; fn != nil {
-				fn(user, resp)
-			}
-		}
+func (s *service) loginPasswordWrong(user models.User, req LoginReq) {
+	if fn := req.Callback.PasswordWrong; fn != nil {
+		fn(user)
 	}
 }
 
-func (s *service) Login(req LoginReq, loginCallback ...LoginCallback) (resp LoginResp, err error) {
+func (s *service) loginSuccess(user models.User, req LoginReq, resp *LoginResp) {
+	if fn := req.Callback.Success; fn != nil {
+		fn(user, resp)
+	}
+}
+
+func (s *service) Login(req LoginReq) (resp LoginResp, err error) {
 	var user models.User
 	if err = db.GetDb().Model(new(models.User)).Where("username=?", req.Username).Scan(&user).Error; err != nil {
 		return
 	}
 	if user.Id == 0 {
 		err = errors.New("用户名不存在")
-		s.loginCallNotFound(loginCallback...)
+		s.loginCallNotFound(req)
 		return
 	}
 	if user.State == models.UserStateDisable {
 		err = errors.New("用户被禁用，请联系管理员")
-		s.loginCallDisabled(user, loginCallback...)
+		s.loginCallDisabled(user, req)
 		return
+	}
+	if user.RoleId > 0 {
+		var roleState byte
+		if err = db.GetDb().Model(new(models.Role)).Where("id=?", user.RoleId).Select("state").Scan(&roleState).Error; err != nil {
+			return
+		}
+		if roleState == models.RoleStateDisable {
+			err = errors.New("用户所属角色被禁用，请联系管理员")
+			s.loginCallRoleDisabled(user, req)
+			return
+		}
 	}
 	if pwd := pkg.MD5(req.Password); pwd != user.Password {
 		err = errors.New("用户名和密码不匹配，请确认后重试")
-		s.loginPasswordWrong(user, loginCallback...)
+		s.loginPasswordWrong(user, req)
 		return
 	}
-	s.loginSuccess(user, &resp, loginCallback...)
+	if err = db.GetDb().Model(new(models.User)).Where("id=?", user.Id).Select("login_time", "login_ip").Updates(models.User{LoginTime: pkg.TimeNowStr(), LoginIp: req.ClientIp}).Error; err != nil {
+		return
+	}
+	resp.Token = pkg.MD5(pkg.RandStr(32))
+	s.loginSuccess(user, req, &resp)
 	return
 }
 
-func (s *service) Logout(req LogoutReq, callback ...LogoutCallback) (err error) {
-	if len(callback) > 0 {
-		for _, fn := range callback {
-			if fn != nil {
-				if err = fn(req); err != nil {
-					return
-				}
-			}
-		}
+func (s *service) Logout(req LogoutReq) (err error) {
+	if fn := req.Callback; fn != nil {
+		return fn(req)
 	}
 	return
 }

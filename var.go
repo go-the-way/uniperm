@@ -11,14 +11,46 @@
 
 package uniperm
 
-var (
-// PayService          = pay.Service
+import (
+	"github.com/rwscode/uniperm/services/permission"
+	"github.com/rwscode/uniperm/services/role"
+	"github.com/rwscode/uniperm/services/user"
 )
 
 var (
-// ReqPay    = pay.ReqPay
+	UserService        = user.Service
+	UserGetPage        = user.GetPage
+	UserGet            = user.Get
+	UserGetPerm        = user.GetPerm
+	UserGetPermButton  = user.GetPermButton
+	UserAdd            = user.Add
+	UserUpdate         = user.Update
+	UserUpdatePassword = user.UpdatePassword
+	UserUpdateRole     = user.UpdateRole
+	UserDel            = user.Del
+	UserEnable         = user.Enable
+	UserDisable        = user.Disable
+	UserLogin          = user.Login
+	UserLogout         = user.Logout
 )
 
 var (
-// ChannelGetPage = channel.GetPage
+	RoleService    = role.Service
+	RoleGetPage    = role.GetPage
+	RoleGet        = role.Get
+	RoleGetPerm    = role.GetPerm
+	RoleUpdatePerm = role.UpdatePerm
+	RoleAdd        = role.Add
+	RoleUpdate     = role.Update
+	RoleDel        = role.Del
+	RoleEnable     = role.Enable
+	RoleDisable    = role.Disable
+)
+
+var (
+	PermissionService = permission.Service
+	permissionTree    = permission.Tree
+	permissionAdd     = permission.Add
+	permissionUpdate  = permission.Update
+	permissionDel     = permission.Del
 )

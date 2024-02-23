@@ -11,8 +11,53 @@
 
 package uniperm
 
-type ()
+import (
+	"github.com/rwscode/uniperm/services/permission"
+	"github.com/rwscode/uniperm/services/role"
+	"github.com/rwscode/uniperm/services/user"
+)
 
 type (
-// ChannelGetReq         = channel.GetReq
+	UserGetPageReq        = user.GetPageReq
+	UserGetReq            = user.GetReq
+	UserGetPermReq        = user.GetPermReq
+	UserGetPermButtonReq  = user.GetPermButtonReq
+	UserAddReq            = user.AddReq
+	UserUpdateReq         = user.UpdateReq
+	UserUpdatePasswordReq = user.UpdatePasswordReq
+	UserUpdateRoleReq     = user.UpdateRoleReq
+	UserDelReq            = user.DelReq
+	UserEnableReq         = user.EnableReq
+	UserDisableReq        = user.DisableReq
+	UserLoginReq          = user.LoginReq
+	UserLogoutReq         = user.LogoutReq
+
+	UserGetPageResp       = user.GetPageResp
+	UserGetResp           = user.GetResp
+	UserGetPermResp       = user.GetPermResp
+	UserGetPermRespRoute  = user.GetPermRespRoute
+	UserGetPermButtonResp = user.GetPermButtonResp
+	UserLoginResp         = user.LoginResp
+)
+
+type (
+	RoleGetPageReq    = role.GetPageReq
+	RoleGetReq        = role.GetReq
+	RoleGetPermReq    = role.GetPermReq
+	RoleUpdatePermReq = role.UpdatePermReq
+	RoleAddReq        = role.AddReq
+	RoleUpdateReq     = role.UpdateReq
+	RoleDelReq        = role.DelReq
+	RoleEnableReq     = role.EnableReq
+	RoleDisableReq    = role.DisableReq
+
+	RoleGetPageResp = role.GetPageResp
+	RoleGetResp     = role.GetResp
+	RoleGetPermResp = role.GetPermResp
+)
+
+type (
+	PermissionTreeReq   = permission.TreeReq
+	PermissionAddReq    = permission.AddReq
+	PermissionUpdateReq = permission.UpdateReq
 )

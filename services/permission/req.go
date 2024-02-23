@@ -12,7 +12,7 @@
 package permission
 
 type (
-	TreeReq = map[uint]struct{}
+	TreeReq struct{ PermissionId []uint }
 	AddReq  struct {
 		Name     string `validate:"minlength(1,权限名称不能为空) maxlength(50,权限名称长度不能超过50)" json:"name"`
 		Route    string `validate:"minlength(1,权限路由不能为空) maxlength(200,权限路由长度不能超过200)" json:"route"`
