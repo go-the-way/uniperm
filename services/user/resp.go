@@ -20,8 +20,8 @@ type (
 	}
 	GetResp     struct{ models.User }
 	GetPermResp struct {
-		SuperAdmin bool // 超级管理员
-		Routes     []GetPermRespRoute
+		SuperAdmin bool               `json:"super_admin"` // 超级管理员
+		Routes     []GetPermRespRoute `json:"routes"`
 	}
 	GetPermRespRoute struct {
 		Id       uint               `json:"id"`

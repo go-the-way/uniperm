@@ -30,7 +30,7 @@ type (
 		UpdateTime2 string `form:"update_time2"` // 修改时间
 	}
 	IdReq struct {
-		Id uint `validate:"min(1,角色id不能为空)" json:"id"`
+		Id uint `validate:"min(1,角色id不能为空)" form:"id" json:"id"`
 	}
 	GetReq        IdReq
 	GetPermReq    IdReq
@@ -47,7 +47,15 @@ type (
 		IdReq  `validate:"valid(T)"`
 		AddReq `validate:"valid(T)"`
 	}
-	DelReq     IdReq
-	EnableReq  IdReq
-	DisableReq IdReq
+	DelReq    IdReq
+	EnableReq struct {
+		IdReq `validate:"valid(T)"`
+
+		Callback func(roleId uint)
+	}
+	DisableReq struct {
+		IdReq `validate:"valid(T)"`
+
+		Callback func(roleId uint)
+	}
 )

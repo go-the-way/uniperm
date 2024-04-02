@@ -64,15 +64,21 @@ func (s *service) Del(req DelReq) (err error) {
 }
 
 func (s *service) Enable(req EnableReq) (err error) {
-	return s.updateState(req.Id, models.RoleStateEnable)
+	return s.updateState(req.Id, models.RoleStateEnable, req.Callback)
 }
 
 func (s *service) Disable(req DisableReq) (err error) {
-	return s.updateState(req.Id, models.RoleStateDisable)
+	return s.updateState(req.Id, models.RoleStateDisable, req.Callback)
 }
 
-func (s *service) updateState(id uint, state byte) (err error) {
-	return db.GetDb().Model(&models.Role{Id: id}).Updates(models.Role{State: state, UpdateTime: pkg.TimeNowStr()}).Error
+func (s *service) updateState(id uint, state byte, callback func(roleId uint)) (err error) {
+	if err = db.GetDb().Model(&models.Role{Id: id}).Updates(models.Role{State: state, UpdateTime: pkg.TimeNowStr()}).Error; err != nil {
+		return
+	}
+	if fn := callback; fn != nil {
+		fn(id)
+	}
+	return
 }
 
 func (s *service) GetPerm(req GetPermReq) (resp GetPermResp, err error) {
