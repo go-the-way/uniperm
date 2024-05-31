@@ -78,20 +78,21 @@ type (
 		IdReq  `validate:"valid(T)"`
 		RoleId uint `validate:"min(1,角色id不能为空)" json:"role_id"` // 角色id
 	}
-	DelReq     IdReq
-	EnableReq  IdReq
-	DisableReq IdReq
-	LoginReq   struct {
+	DelReq           IdReq
+	EnableReq        IdReq
+	DisableReq       IdReq
+	LoginReqCallback struct {
+		NotFound      func()
+		Disabled      func(user models.User)
+		RoleDisabled  func(user models.User)
+		PasswordWrong func(user models.User)
+		Success       func(user models.User, resp *LoginResp)
+	}
+	LoginReq struct {
 		Username string `validate:"minlength(1,用户名不能为空) maxlength(20,用户名长度不能超过20)" json:"username"`
 		Password string `validate:"minlength(1,密码不能为空) maxlength(20,密码长度不能超过20)" json:"password"`
 		ClientIp string `validate:"maxlength(20,客户端ip长度不能超过20)" json:"client_ip"`
-		Callback struct {
-			NotFound      func()
-			Disabled      func(user models.User)
-			RoleDisabled  func(user models.User)
-			PasswordWrong func(user models.User)
-			Success       func(user models.User, resp *LoginResp)
-		}
+		Callback LoginReqCallback
 	}
 	LogoutReq struct {
 		Token    string `validate:"minlength(1,token不能为空)" form:"token" json:"token"`
