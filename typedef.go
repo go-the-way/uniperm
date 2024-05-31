@@ -61,4 +61,5 @@ type (
 	PermissionTreeReq   = permission.TreeReq
 	PermissionAddReq    = permission.AddReq
 	PermissionUpdateReq = permission.UpdateReq
+	PermissionDelReq    = permission.DelReq
 )
