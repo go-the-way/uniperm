@@ -49,8 +49,8 @@ var (
 
 var (
 	PermissionService = permission.Service
-	permissionTree    = permission.Tree
-	permissionAdd     = permission.Add
-	permissionUpdate  = permission.Update
-	permissionDel     = permission.Del
+	PermissionTree    = permission.Tree
+	PermissionAdd     = permission.Add
+	PermissionUpdate  = permission.Update
+	PermissionDel     = permission.Del
 )
