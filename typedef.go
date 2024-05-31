@@ -30,6 +30,7 @@ type (
 	UserEnableReq         = user.EnableReq
 	UserDisableReq        = user.DisableReq
 	UserLoginReq          = user.LoginReq
+	UserLoginReqCallback  = user.LoginReqCallback
 	UserLogoutReq         = user.LogoutReq
 
 	UserGetPageResp       = user.GetPageResp
