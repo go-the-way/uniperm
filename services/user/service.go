@@ -42,6 +42,7 @@ func (s *service) GetPage(req GetPageReq) (resp GetPageResp, err error) {
 	if req.OrderBy != "" {
 		q.Order(req.OrderBy)
 	}
+	resp.List = make([]models.User, 0)
 	err = db.GetPagination()(q, req.Page, req.Limit, &resp.Total, &resp.List)
 	return
 }
