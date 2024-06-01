@@ -103,6 +103,10 @@ func (s *service) UpdatePerm(req UpdatePermReq) (err error) {
 		_ = tx.Rollback().Error
 		return
 	}
+	if err = tx.Model(new(models.RolePermission)).Where("role_id=?", req.Id).Delete(models.RolePermission{}).Error; err != nil {
+		_ = tx.Rollback().Error
+		return
+	}
 	if err = tx.CreateInBatches(rps, len(rps)).Error; err != nil {
 		_ = tx.Rollback().Error
 		return err
