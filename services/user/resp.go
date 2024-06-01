@@ -21,7 +21,7 @@ type (
 	GetResp     struct{ models.User }
 	GetPermResp struct {
 		SuperAdmin bool               `json:"super_admin"` // 超级管理员
-		Routes     []GetPermRespRoute `json:"routes"`
+		Routes     []GetPermRespRoute `json:"routes,omitempty"`
 	}
 	GetPermRespRoute struct {
 		Id       uint               `json:"id"`
@@ -29,8 +29,8 @@ type (
 		Children []GetPermRespRoute `json:"children,omitempty"`
 	}
 	GetPermButtonResp struct {
-		SuperAdmin bool     // 超级管理员
-		Buttons    []string // Button key
+		SuperAdmin bool     `json:"super_admin"`       // 超级管理员
+		Buttons    []string `json:"buttons,omitempty"` // Button key
 	}
 	LoginResp struct {
 		Token string `json:"token"` // Login token
