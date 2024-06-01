@@ -1,0 +1,106 @@
+[
+  {
+    "path": "/domain",
+    "name": "域名管理",
+    "icon": "GroupOutlined",
+    "routes": [
+      {
+        "path": "/domain/add",
+        "name": "域名录入"
+      },
+      {
+        "path": "/domain/list",
+        "name": "域名列表"
+      },
+      {
+        "path": "/domain/renew",
+        "name": "待续费清单"
+      }
+    ]
+  },
+  {
+    "path": "/domain-providers",
+    "name": "域名提供商",
+    "routes": [
+      {
+        "path": "/domain-providers/list",
+        "name": "提供商列表"
+      },
+      {
+        "path": "/domain-providers/account-list",
+        "name": "账户列表"
+      }
+    ]
+  },
+  {
+    "path": "/dns-providers",
+    "name": "DNS提供商",
+    "icon": "LaptopOutlined",
+    "routes": [
+      {
+        "path": "/dns-providers/list",
+        "name": "提供商列表"
+      },
+      {
+        "path": "/dns-providers/account-list",
+        "name": "账户列表"
+      }
+    ]
+  },
+  {
+    "path": "/project",
+    "name": "项目管理",
+    "icon": "ProjectOutlined",
+    "routes": [
+      {
+        "path": "/project/list",
+        "name": "项目列表"
+      },
+      {
+        "path": "/project/usage-list",
+        "name": "用途列表"
+      }
+    ]
+  },
+  {
+    "path": "/logs",
+    "name": "日志管理",
+    "icon": "TableOutlined",
+    "routes": [
+      {
+        "path": "/logs/login-logs",
+        "name": "登录日志"
+      },
+      {
+        "path": "/logs/operation-logs",
+        "name": "操作日志"
+      }
+    ]
+  },
+  {
+    "path": "/system",
+    "name": "系统管理",
+    "routes": [
+      {
+        "path": "/system/general-settings",
+        "name": "常规设置"
+      },
+      {
+        "path": "/system/jurisdiction",
+        "name": "权限管理"
+      },
+      {
+        "path": "/system/role",
+        "name": "角色管理"
+      },
+      {
+        "path": "/system/user",
+        "name": "用户管理"
+      },
+      {
+        "path": "/system/transfer",
+        "name": "流转模式"
+      }
+    ]
+  }
+]

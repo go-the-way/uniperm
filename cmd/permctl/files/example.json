@@ -1,0 +1,19 @@
+[
+  {
+    "path": "/example",
+    "name": "Example",
+    "routes": [
+      {
+        "path": "/example/eg1",
+        "name": "Example1",
+        "routes": [
+          {
+            "path": "btn1",
+            "name": "Button1",
+            "is_button": true
+          }
+        ]
+      }
+    ]
+  }
+]

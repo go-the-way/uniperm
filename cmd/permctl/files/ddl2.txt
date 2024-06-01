@@ -1,0 +1,1 @@
+create index idx_uniperm_permissions_parent_id on uniperm_permissions (parent_id)

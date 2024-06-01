@@ -1,0 +1,10 @@
+create table uniperm_permissions
+(
+    id        bigint unsigned auto_increment comment '权限id' primary key,
+    name      varchar(50)                 not null comment '权限名称',
+    route     varchar(200)                not null comment '权限路由',
+    parent_id bigint unsigned default '0' not null comment '上级权限id',
+    is_button tinyint         default 2   not null comment '是否按钮 1是 2否'
+);
+
+create index idx_uniperm_permissions_parent_id on uniperm_permissions (parent_id);
