@@ -1,6 +1,11 @@
 # uniperm
 The unified permission package
 
+# Install permctl
+```
+go install github.com/rwscode/uniperm/cmd/permctl@latest
+```
+
 # Services
 
 ## User 用户模块
