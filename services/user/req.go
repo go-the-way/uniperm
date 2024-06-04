@@ -82,11 +82,11 @@ type (
 	EnableReq        IdReq
 	DisableReq       IdReq
 	LoginReqCallback struct {
-		NotFound      func()
-		Disabled      func(user models.User)
-		RoleDisabled  func(user models.User)
-		PasswordWrong func(user models.User)
-		Success       func(user models.User, resp *LoginResp)
+		NotFound      func(req LoginReq)
+		Disabled      func(req LoginReq, user models.User)
+		RoleDisabled  func(req LoginReq, user models.User)
+		PasswordWrong func(req LoginReq, user models.User)
+		Success       func(req LoginReq, user models.User, resp *LoginResp)
 	}
 	LoginReq struct {
 		Username string `validate:"minlength(1,用户名不能为空) maxlength(20,用户名长度不能超过20)" json:"username"`

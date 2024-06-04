@@ -148,31 +148,31 @@ where sp.id = srp.permission_id
 
 func (s *service) loginCallNotFound(req LoginReq) {
 	if fn := req.Callback.NotFound; fn != nil {
-		fn()
+		fn(req)
 	}
 }
 
 func (s *service) loginCallDisabled(user models.User, req LoginReq) {
 	if fn := req.Callback.Disabled; fn != nil {
-		fn(user)
+		fn(req, user)
 	}
 }
 
 func (s *service) loginCallRoleDisabled(user models.User, req LoginReq) {
 	if fn := req.Callback.RoleDisabled; fn != nil {
-		fn(user)
+		fn(req, user)
 	}
 }
 
 func (s *service) loginPasswordWrong(user models.User, req LoginReq) {
 	if fn := req.Callback.PasswordWrong; fn != nil {
-		fn(user)
+		fn(req, user)
 	}
 }
 
 func (s *service) loginSuccess(user models.User, req LoginReq, resp *LoginResp) {
 	if fn := req.Callback.Success; fn != nil {
-		fn(user, resp)
+		fn(req, user, resp)
 	}
 }
 
