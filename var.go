@@ -27,7 +27,7 @@ var (
 	UserUpdate         = user.Update
 	UserUpdatePassword = user.UpdatePassword
 	UserUpdateRole     = user.UpdateRole
-	UserDel            = user.Delete
+	UserDelete         = user.Delete
 	UserEnable         = user.Enable
 	UserDisable        = user.Disable
 	UserLogin          = user.Login
@@ -42,7 +42,7 @@ var (
 	RoleUpdatePerm = role.UpdatePerm
 	RoleAdd        = role.Add
 	RoleUpdate     = role.Update
-	RoleDel        = role.Delete
+	RoleDelete     = role.Delete
 	RoleEnable     = role.Enable
 	RoleDisable    = role.Disable
 )
@@ -53,5 +53,5 @@ var (
 	PermissionGet     = permission.Get
 	PermissionAdd     = permission.Add
 	PermissionUpdate  = permission.Update
-	PermissionDel     = permission.Delete
+	PermissionDelete  = permission.Delete
 )
