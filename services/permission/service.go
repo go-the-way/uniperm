@@ -23,12 +23,18 @@ func (s *service) Tree(req TreeReq) (resp TreeResp, err error) {
 	return base.PermTree(req.PermissionId)
 }
 
-func (s *service) Add(req AddReq) error { return db.GetDb().Create(req.Transform()).Error }
-
-func (s *service) Update(req UpdateReq) error {
-	return db.GetDb().Model(&models.Permission{Id: req.Id}).Select("name", "route").Updates(req.Transform()).Error
+func (s *service) Get(req GetReq) (resp GetResp, err error) {
+	return base.Return(resp, db.GetDb().Model(new(models.Permission)).Where("id=?", req.Id).First(&resp).Error)
 }
 
-func (s *service) Del(req DelReq) error {
-	return db.GetDb().Delete(&models.Permission{Id: req.Id}).Error
+func (s *service) Add(req AddReq) (err error) {
+	return base.Callback1(db.GetDb().Create(req.Transform()).Error, req, req.Callback)
+}
+
+func (s *service) Update(req UpdateReq) (err error) {
+	return base.Callback1(db.GetDb().Model(&models.Permission{Id: req.Id}).Select("name", "route").Updates(req.Transform()).Error, req, req.Callback)
+}
+
+func (s *service) Delete(req DeleteReq) (err error) {
+	return base.Callback1(db.GetDb().Delete(&models.Permission{Id: req.Id}).Error, req, req.Callback)
 }

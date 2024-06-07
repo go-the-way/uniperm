@@ -12,7 +12,11 @@
 package permission
 
 import (
+	"github.com/rwscode/uniperm/models"
 	"github.com/rwscode/uniperm/services/base"
 )
 
-type TreeResp = base.TreeResp
+type (
+	TreeResp = base.TreeResp
+	GetResp  models.Permission
+)

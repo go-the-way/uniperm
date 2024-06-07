@@ -20,7 +20,7 @@ var (
 	UpdatePerm = Service.UpdatePerm
 	Add        = Service.Add
 	Update     = Service.Update
-	Del        = Service.Del
+	Delete     = Service.Delete
 	Enable     = Service.Enable
 	Disable    = Service.Disable
 )
@@ -32,7 +32,7 @@ type SVC interface {
 	UpdatePerm(req UpdatePermReq) (err error)
 	Add(req AddReq) (err error)
 	Update(req UpdateReq) (err error)
-	Del(req DelReq) (err error)
+	Delete(req DeleteReq) (err error)
 	Enable(req EnableReq) (err error)
 	Disable(req DisableReq) (err error)
 }

@@ -37,25 +37,29 @@ type (
 	UpdatePermReq struct {
 		IdReq       `validate:"valid(T)"`
 		Permissions []uint `validate:"minlength(1,权限id不能为空)" json:"permissions"`
+		Callback    func(req UpdatePermReq)
 	}
 	AddReq struct {
 		Name        string `validate:"minlength(1,角色名称不能为空) maxlength(50,角色名称长度不能超过50)" json:"name"` // 角色名称
 		Description string `validate:"maxlength(200,角色描述长度不能超过200)" json:"description"`              // 角色描述
 		Type        string `validate:"maxlength(50,角色类型长度不能超过50)" json:"type"`                       // 角色类型
+		Callback    func(req AddReq)
 	}
 	UpdateReq struct {
-		IdReq  `validate:"valid(T)"`
-		AddReq `validate:"valid(T)"`
+		IdReq    `validate:"valid(T)"`
+		AddReq   `validate:"valid(T)"`
+		Callback func(req UpdateReq)
 	}
-	DelReq    IdReq
+	DeleteReq struct {
+		IdReq
+		Callback func(req DeleteReq)
+	}
 	EnableReq struct {
-		IdReq `validate:"valid(T)"`
-
-		Callback func(roleId uint)
+		IdReq    `validate:"valid(T)"`
+		Callback func(req EnableReq)
 	}
 	DisableReq struct {
-		IdReq `validate:"valid(T)"`
-
-		Callback func(roleId uint)
+		IdReq    `validate:"valid(T)"`
+		Callback func(req DisableReq)
 	}
 )

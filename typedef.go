@@ -26,7 +26,7 @@ type (
 	UserUpdateReq         = user.UpdateReq
 	UserUpdatePasswordReq = user.UpdatePasswordReq
 	UserUpdateRoleReq     = user.UpdateRoleReq
-	UserDelReq            = user.DelReq
+	UserDelReq            = user.DeleteReq
 	UserEnableReq         = user.EnableReq
 	UserDisableReq        = user.DisableReq
 	UserLoginReq          = user.LoginReq
@@ -48,7 +48,7 @@ type (
 	RoleUpdatePermReq = role.UpdatePermReq
 	RoleAddReq        = role.AddReq
 	RoleUpdateReq     = role.UpdateReq
-	RoleDelReq        = role.DelReq
+	RoleDelReq        = role.DeleteReq
 	RoleEnableReq     = role.EnableReq
 	RoleDisableReq    = role.DisableReq
 
@@ -59,7 +59,10 @@ type (
 
 type (
 	PermissionTreeReq   = permission.TreeReq
+	PermissionGetReq    = permission.GetReq
 	PermissionAddReq    = permission.AddReq
 	PermissionUpdateReq = permission.UpdateReq
-	PermissionDelReq    = permission.DelReq
+	PermissionDelReq    = permission.DeleteReq
+
+	PermissionGetResp = permission.GetResp
 )

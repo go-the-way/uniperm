@@ -15,14 +15,16 @@ var (
 	Service SVC = &service{}
 
 	Tree   = Service.Tree
+	Get    = Service.Get
 	Add    = Service.Add
 	Update = Service.Update
-	Del    = Service.Del
+	Delete = Service.Delete
 )
 
 type SVC interface {
 	Tree(req TreeReq) (resp TreeResp, err error)
+	Get(req GetReq) (resp GetResp, err error)
 	Add(req AddReq) (err error)
 	Update(req UpdateReq) (err error)
-	Del(req DelReq) (err error)
+	Delete(req DeleteReq) (err error)
 }

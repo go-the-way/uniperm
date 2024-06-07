@@ -13,19 +13,25 @@ package permission
 
 type (
 	TreeReq struct{ PermissionId []uint }
-	AddReq  struct {
+	IdReq   struct {
+		Id uint `validate:"min(1,权限id不能为空)" json:"id"`
+	}
+	GetReq IdReq
+	AddReq struct {
 		Name     string `validate:"minlength(1,权限名称不能为空) maxlength(50,权限名称长度不能超过50)" json:"name"`
 		Route    string `validate:"minlength(1,权限路由不能为空) maxlength(200,权限路由长度不能超过200)" json:"route"`
 		IsButton byte   `validate:"enum(1|2,是否状态不合法)" json:"is_button"`
 		ParentId uint   `json:"parent_id"`
-	}
-	IdReq struct {
-		Id uint `validate:"min(1,权限id不能为空)" json:"id"`
+		Callback func(req AddReq)
 	}
 	UpdateReq struct {
-		IdReq `validate:"valid(T)"`
-		Name  string `validate:"minlength(1,权限名称不能为空) maxlength(50,权限名称长度不能超过50)" json:"name"`
-		Route string `validate:"minlength(1,权限路由不能为空) maxlength(200,权限路由长度不能超过200)" json:"route"`
+		IdReq    `validate:"valid(T)"`
+		Name     string `validate:"minlength(1,权限名称不能为空) maxlength(50,权限名称长度不能超过50)" json:"name"`
+		Route    string `validate:"minlength(1,权限路由不能为空) maxlength(200,权限路由长度不能超过200)" json:"route"`
+		Callback func(req UpdateReq)
 	}
-	DelReq IdReq
+	DeleteReq struct {
+		IdReq
+		Callback func(req DeleteReq)
+	}
 )

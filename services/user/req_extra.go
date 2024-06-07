@@ -31,20 +31,20 @@ func (r *UpdatePasswordReq) Check() (err error) { return base.CheckUserExists(r.
 func (r *UpdateRoleReq) Check() (err error) {
 	return base.CheckAll(
 		func() (err error) { return base.CheckUserIsSuper(r.Id) },
-		func() (err error) { return (&DelReq{Id: r.Id}).Check() },
+		func() (err error) { return (&DeleteReq{IdReq: IdReq{r.Id}}).Check() },
 	)
 }
 
-func (r *DelReq) Check() (err error) {
+func (r *DeleteReq) Check() (err error) {
 	return base.CheckAll(
 		func() (err error) { return base.CheckUserIsSuper(r.Id) },
 		func() (err error) { return base.CheckUserExists(r.Id) },
 	)
 }
 
-func (r *EnableReq) Check() (err error) { return (&DelReq{Id: r.Id}).Check() }
+func (r *EnableReq) Check() (err error) { return (&DeleteReq{IdReq: IdReq{r.Id}}).Check() }
 
-func (r *DisableReq) Check() (err error) { return (&DelReq{Id: r.Id}).Check() }
+func (r *DisableReq) Check() (err error) { return (&DeleteReq{IdReq: IdReq{r.Id}}).Check() }
 
 func (r *AddReq) Transform() *models.User {
 	return &models.User{

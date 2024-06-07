@@ -21,7 +21,7 @@ func (r *AddReq) Check() (err error) { return }
 
 func (r *UpdateReq) Check() (err error) { return base.CheckRoleExist(r.Id) }
 
-func (r *DelReq) Check() (err error) {
+func (r *DeleteReq) Check() (err error) {
 	if err = base.CheckRoleExist(r.Id); err != nil {
 		return
 	}

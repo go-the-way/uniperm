@@ -27,7 +27,7 @@ func (r *UpdateReq) Check() (err error) {
 	return base.CheckPermissionExist(r.Id)
 }
 
-func (r *DelReq) Check() (err error) {
+func (r *DeleteReq) Check() (err error) {
 	return base.CheckAll(
 		func() (err error) { return base.CheckPermissionExist(r.Id) },
 		func() (err error) { return base.CheckPermissionHaveNoSubPerms(r.Id) },

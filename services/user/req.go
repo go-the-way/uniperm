@@ -59,28 +59,40 @@ type (
 		Remark1     string `validate:"maxlength(200,备注1长度不能超过200)" json:"remark1"`                     // 备注1
 		Remark2     string `validate:"maxlength(200,备注2长度不能超过200)" json:"remark2"`                     // 备注2
 		Remark3     string `validate:"maxlength(200,备注3长度不能超过200)" json:"remark3"`                     // 备注3
+		Callback    func(req AddReq)
 	}
 	UpdateReq struct {
-		IdReq `validate:"valid(T)"`
-
+		IdReq       `validate:"valid(T)"`
 		BusinessId1 string `validate:"maxlength(50,业务id1长度不能超过50)" json:"business_id1"` // 业务id1
 		BusinessId2 string `validate:"maxlength(50,业务id2长度不能超过50)" json:"business_id2"` // 业务id2
 		BusinessId3 string `validate:"maxlength(50,业务id3长度不能超过50)" json:"business_id3"` // 业务id3
 		Remark1     string `validate:"maxlength(200,备注1长度不能超过200)" json:"remark1"`      // 备注1
 		Remark2     string `validate:"maxlength(200,备注2长度不能超过200)" json:"remark2"`      // 备注2
 		Remark3     string `validate:"maxlength(200,备注3长度不能超过200)" json:"remark3"`      // 备注3
+		Callback    func(req UpdateReq)
 	}
 	UpdatePasswordReq struct {
 		IdReq    `validate:"valid(T)"`
 		Password string `validate:"minlength(1,密码不能为空) maxlength(20,密码长度不能超过20)" json:"password"` // 密码
+		Callback func(req UpdatePasswordReq)
 	}
 	UpdateRoleReq struct {
-		IdReq  `validate:"valid(T)"`
-		RoleId uint `validate:"min(1,角色id不能为空)" json:"role_id"` // 角色id
+		IdReq    `validate:"valid(T)"`
+		RoleId   uint `validate:"min(1,角色id不能为空)" json:"role_id"` // 角色id
+		Callback func(req UpdateRoleReq)
 	}
-	DelReq           IdReq
-	EnableReq        IdReq
-	DisableReq       IdReq
+	DeleteReq struct {
+		IdReq
+		Callback func(req DeleteReq)
+	}
+	EnableReq struct {
+		IdReq
+		Callback func(req EnableReq)
+	}
+	DisableReq struct {
+		IdReq
+		Callback func(req DisableReq)
+	}
 	LoginReqCallback struct {
 		NotFound      func(req LoginReq)
 		Disabled      func(req LoginReq, user models.User)

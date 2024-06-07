@@ -22,7 +22,7 @@ var (
 	Update         = Service.Update
 	UpdatePassword = Service.UpdatePassword
 	UpdateRole     = Service.UpdateRole
-	Del            = Service.Del
+	Delete         = Service.Delete
 	Enable         = Service.Enable
 	Disable        = Service.Disable
 	Login          = Service.Login
@@ -38,7 +38,7 @@ type SVC interface {
 	Update(req UpdateReq) (err error)
 	UpdatePassword(req UpdatePasswordReq) (err error)
 	UpdateRole(req UpdateRoleReq) (err error)
-	Del(req DelReq) (err error)
+	Delete(req DeleteReq) (err error)
 	Enable(req EnableReq) (err error)
 	Disable(req DisableReq) (err error)
 	Login(req LoginReq) (resp LoginResp, err error)

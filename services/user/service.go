@@ -17,6 +17,7 @@ import (
 	"github.com/rwscode/uniperm/deps/db"
 	"github.com/rwscode/uniperm/deps/pkg"
 	"github.com/rwscode/uniperm/models"
+	"github.com/rwscode/uniperm/services/base"
 )
 
 type service struct{}
@@ -43,8 +44,7 @@ func (s *service) GetPage(req GetPageReq) (resp GetPageResp, err error) {
 		q.Order(req.OrderBy)
 	}
 	resp.List = make([]models.User, 0)
-	err = db.GetPagination()(q, req.Page, req.Limit, &resp.Total, &resp.List)
-	return
+	return base.Return(resp, db.GetPagination()(q, req.Page, req.Limit, &resp.Total, &resp.List))
 }
 
 func (s *service) Get(req GetReq) (resp GetResp, err error) {
@@ -61,31 +61,31 @@ func (s *service) Get(req GetReq) (resp GetResp, err error) {
 }
 
 func (s *service) Add(req AddReq) (err error) {
-	return db.GetDb().Create(req.Transform()).Error
+	return base.Callback1(db.GetDb().Create(req.Transform()).Error, req, req.Callback)
 }
 
 func (s *service) Update(req UpdateReq) (err error) {
-	return db.GetDb().Model(&models.User{Id: req.Id}).Select("business_id1", "business_id2", "business_id3", "remark1", "remark2", "remark3", "update_time").Updates(req.Transform()).Error
+	return base.Callback1(db.GetDb().Model(&models.User{Id: req.Id}).Select("business_id1", "business_id2", "business_id3", "remark1", "remark2", "remark3", "update_time").Updates(req.Transform()).Error, req, req.Callback)
 }
 
 func (s *service) UpdatePassword(req UpdatePasswordReq) (err error) {
-	return db.GetDb().Model(&models.User{Id: req.Id}).Updates(&models.User{Password: pkg.MD5(req.Password), UpdateTime: pkg.TimeNowStr()}).Error
+	return base.Callback1(db.GetDb().Model(&models.User{Id: req.Id}).Updates(&models.User{Password: pkg.MD5(req.Password), UpdateTime: pkg.TimeNowStr()}).Error, req, req.Callback)
 }
 
 func (s *service) UpdateRole(req UpdateRoleReq) (err error) {
-	return db.GetDb().Model(&models.User{Id: req.Id}).Updates(&models.User{RoleId: req.RoleId, UpdateTime: pkg.TimeNowStr()}).Error
+	return base.Callback1(db.GetDb().Model(&models.User{Id: req.Id}).Updates(&models.User{RoleId: req.RoleId, UpdateTime: pkg.TimeNowStr()}).Error, req, req.Callback)
 }
 
-func (s *service) Del(req DelReq) (err error) {
-	return db.GetDb().Delete(&models.User{Id: req.Id}).Error
+func (s *service) Delete(req DeleteReq) (err error) {
+	return base.Callback1(db.GetDb().Delete(&models.User{Id: req.Id}).Error, req, req.Callback)
 }
 
 func (s *service) Enable(req EnableReq) (err error) {
-	return s.updateState(req.Id, models.UserStateEnable)
+	return base.Callback1(s.updateState(req.Id, models.UserStateEnable), req.Callback)
 }
 
 func (s *service) Disable(req DisableReq) (err error) {
-	return s.updateState(req.Id, models.UserStateDisable)
+	return base.Callback1(s.updateState(req.Id, models.UserStateDisable), req.Callback)
 }
 
 func (s *service) updateState(id uint, state byte) (err error) {
@@ -146,36 +146,6 @@ where sp.id = srp.permission_id
 	return
 }
 
-func (s *service) loginCallNotFound(req LoginReq) {
-	if fn := req.Callback.NotFound; fn != nil {
-		fn(req)
-	}
-}
-
-func (s *service) loginCallDisabled(user models.User, req LoginReq) {
-	if fn := req.Callback.Disabled; fn != nil {
-		fn(req, user)
-	}
-}
-
-func (s *service) loginCallRoleDisabled(user models.User, req LoginReq) {
-	if fn := req.Callback.RoleDisabled; fn != nil {
-		fn(req, user)
-	}
-}
-
-func (s *service) loginPasswordWrong(user models.User, req LoginReq) {
-	if fn := req.Callback.PasswordWrong; fn != nil {
-		fn(req, user)
-	}
-}
-
-func (s *service) loginSuccess(user models.User, req LoginReq, resp *LoginResp) {
-	if fn := req.Callback.Success; fn != nil {
-		fn(req, user, resp)
-	}
-}
-
 func (s *service) Login(req LoginReq) (resp LoginResp, err error) {
 	var user models.User
 	if err = db.GetDb().Model(new(models.User)).Where("username=?", req.Username).Scan(&user).Error; err != nil {
@@ -183,12 +153,12 @@ func (s *service) Login(req LoginReq) (resp LoginResp, err error) {
 	}
 	if user.Id == 0 {
 		err = errors.New("用户名不存在")
-		s.loginCallNotFound(req)
+		base.Callback1(nil, req, req.Callback.NotFound)
 		return
 	}
 	if user.State == models.UserStateDisable {
 		err = errors.New("用户被禁用，请联系管理员")
-		s.loginCallDisabled(user, req)
+		base.Callback2(nil, req, user, req.Callback.Disabled)
 		return
 	}
 	if user.RoleId > 0 {
@@ -198,26 +168,21 @@ func (s *service) Login(req LoginReq) (resp LoginResp, err error) {
 		}
 		if roleState == models.RoleStateDisable {
 			err = errors.New("用户所属角色被禁用，请联系管理员")
-			s.loginCallRoleDisabled(user, req)
+			base.Callback2(nil, req, user, req.Callback.RoleDisabled)
 			return
 		}
 	}
 	if pwd := pkg.MD5(req.Password); pwd != user.Password {
 		err = errors.New("用户名和密码不匹配，请确认后重试")
-		s.loginPasswordWrong(user, req)
+		base.Callback2(nil, req, user, req.Callback.PasswordWrong)
 		return
 	}
 	if err = db.GetDb().Model(new(models.User)).Where("id=?", user.Id).Select("login_time", "login_ip").Updates(models.User{LoginTime: pkg.TimeNowStr(), LoginIp: req.ClientIp}).Error; err != nil {
 		return
 	}
 	resp.Token = pkg.MD5(pkg.RandStr(32))
-	s.loginSuccess(user, req, &resp)
+	base.Callback3(nil, req, user, &resp, req.Callback.Success)
 	return
 }
 
-func (s *service) Logout(req LogoutReq) (err error) {
-	if fn := req.Callback; fn != nil {
-		return fn(req)
-	}
-	return
-}
+func (s *service) Logout(req LogoutReq) (err error) { return base.Callback1Err(nil, req, req.Callback) }

@@ -37,7 +37,7 @@ func (s *service) GetPage(req GetPageReq) (resp GetPageResp, err error) {
 		q.Order(req.OrderBy)
 	}
 	resp.List = make([]models.Role, 0)
-	err = db.GetPagination()(q, req.Page, req.Limit, &resp.Total, &resp.List)
+	base.Return(resp, db.GetPagination()(q, req.Page, req.Limit, &resp.Total, &resp.List))
 	return
 }
 
@@ -54,32 +54,28 @@ func (s *service) Get(req GetReq) (resp GetResp, err error) {
 	return
 }
 
-func (s *service) Add(req AddReq) error { return db.GetDb().Create(req.Transform()).Error }
-
-func (s *service) Update(req UpdateReq) (err error) {
-	return db.GetDb().Model(&models.Role{Id: req.Id}).Omit("create_time", "state").Updates(req.Transform()).Error
+func (s *service) Add(req AddReq) error {
+	return base.Callback1(db.GetDb().Create(req.Transform()).Error, req, req.Callback)
 }
 
-func (s *service) Del(req DelReq) (err error) {
-	return db.GetDb().Delete(&models.Role{Id: req.Id}).Error
+func (s *service) Update(req UpdateReq) (err error) {
+	return base.Callback1(db.GetDb().Model(&models.Role{Id: req.Id}).Omit("create_time", "state").Updates(req.Transform()).Error, req, req.Callback)
+}
+
+func (s *service) Delete(req DeleteReq) (err error) {
+	return base.Callback1(db.GetDb().Delete(&models.Role{Id: req.Id}).Error, req, req.Callback)
 }
 
 func (s *service) Enable(req EnableReq) (err error) {
-	return s.updateState(req.Id, models.RoleStateEnable, req.Callback)
+	return base.Callback1(s.updateState(req.Id, models.RoleStateEnable), req, req.Callback)
 }
 
 func (s *service) Disable(req DisableReq) (err error) {
-	return s.updateState(req.Id, models.RoleStateDisable, req.Callback)
+	return base.Callback1(s.updateState(req.Id, models.RoleStateDisable), req, req.Callback)
 }
 
-func (s *service) updateState(id uint, state byte, callback func(roleId uint)) (err error) {
-	if err = db.GetDb().Model(&models.Role{Id: id}).Updates(models.Role{State: state, UpdateTime: pkg.TimeNowStr()}).Error; err != nil {
-		return
-	}
-	if fn := callback; fn != nil {
-		fn(id)
-	}
-	return
+func (s *service) updateState(id uint, state byte) (err error) {
+	return db.GetDb().Model(&models.Role{Id: id}).Updates(models.Role{State: state, UpdateTime: pkg.TimeNowStr()}).Error
 }
 
 func (s *service) GetPerm(req GetPermReq) (resp GetPermResp, err error) {
@@ -109,12 +105,12 @@ func (s *service) UpdatePerm(req UpdatePermReq) (err error) {
 	}
 	if err = tx.CreateInBatches(rps, len(rps)).Error; err != nil {
 		_ = tx.Rollback().Error
-		return err
+		return
 	}
 	if err = tx.Model(&models.Role{Id: req.Id}).UpdateColumn("update_time", pkg.TimeNowStr()).Error; err != nil {
 		_ = tx.Rollback().Error
-		return err
+		return
 	}
 	_ = tx.Commit().Error
-	return nil
+	return base.Callback1(err, req, req.Callback)
 }
