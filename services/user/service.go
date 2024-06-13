@@ -66,15 +66,12 @@ func (s *service) Add(req AddReq) (err error) {
 
 func (s *service) Update(req UpdateReq) (err error) {
 	var cols []string
-	pkg.IfNotEmptyFunc(req.BusinessId1, func() { cols = append(cols, "business_id1") })
-	pkg.IfNotEmptyFunc(req.BusinessId2, func() { cols = append(cols, "business_id2") })
-	pkg.IfNotEmptyFunc(req.BusinessId3, func() { cols = append(cols, "business_id3") })
-	pkg.IfNotEmptyFunc(req.Remark1, func() { cols = append(cols, "remark1") })
-	pkg.IfNotEmptyFunc(req.Remark2, func() { cols = append(cols, "remark2") })
-	pkg.IfNotEmptyFunc(req.Remark3, func() { cols = append(cols, "remark3") })
-	if len(cols) <= 0 {
-		return
-	}
+	cols = append(cols, "business_id1")
+	cols = append(cols, "business_id2")
+	cols = append(cols, "business_id3")
+	cols = append(cols, "remark1")
+	cols = append(cols, "remark2")
+	cols = append(cols, "remark3")
 	return base.Callback1(db.GetDb().Model(&models.User{Id: req.Id}).Select(cols).Updates(req.Transform()).Error, req, req.Callback)
 }
 
