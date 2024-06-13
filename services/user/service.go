@@ -72,6 +72,9 @@ func (s *service) Update(req UpdateReq) (err error) {
 	pkg.IfNotEmptyFunc(req.Remark1, func() { cols = append(cols, "remark1") })
 	pkg.IfNotEmptyFunc(req.Remark2, func() { cols = append(cols, "remark2") })
 	pkg.IfNotEmptyFunc(req.Remark3, func() { cols = append(cols, "remark3") })
+	if len(cols) <= 0 {
+		return
+	}
 	return base.Callback1(db.GetDb().Model(&models.User{Id: req.Id}).Select(cols).Updates(req.Transform()).Error, req, req.Callback)
 }
 
