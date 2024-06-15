@@ -49,7 +49,7 @@ func (s *service) GetPage(req GetPageReq) (resp GetPageResp, err error) {
 
 func (s *service) Get(req GetReq) (resp GetResp, err error) {
 	var list []models.User
-	if err = db.GetDb().Model(new(models.Role)).Where("id=?", req.Id).Find(&list).Error; err != nil {
+	if err = db.GetDb().Model(new(models.User)).Where("id=?", req.Id).Find(&list).Error; err != nil {
 		return
 	}
 	if len(list) == 0 {
