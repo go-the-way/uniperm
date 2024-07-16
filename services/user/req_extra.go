@@ -21,6 +21,7 @@ func (r *AddReq) Check() (err error) {
 	return base.CheckAll(
 		func() (err error) { return base.CheckUsernameExists(r.Username) },
 		func() (err error) {
+
 			if r.RoleId > 0 {
 				return base.CheckRoleExist(r.RoleId)
 			}
