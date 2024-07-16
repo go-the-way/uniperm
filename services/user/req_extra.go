@@ -18,12 +18,15 @@ import (
 )
 
 func (r *AddReq) Check() (err error) {
-	var functions []func() error
-	functions = append(functions, func() (err error) { return base.CheckUsernameExists(r.Username) })
-	if r.RoleId > 0 {
-		functions = append(functions, func() (err error) { return base.CheckRoleExist(r.RoleId) })
-	}
-	return base.CheckAll(functions...)
+	return base.CheckAll(
+		func() (err error) { return base.CheckUsernameExists(r.Username) },
+		func() (err error) {
+			if r.RoleId > 0 {
+				return base.CheckRoleExist(r.RoleId)
+			}
+			return
+		},
+	)
 }
 
 func (r *UpdateReq) Check() (err error) { return base.CheckUserExists(r.Id) }
