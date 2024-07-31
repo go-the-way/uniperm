@@ -17,6 +17,6 @@ var (
 	rootCmd = &cobra.Command{
 		Use:   "permctl",
 		Short: "permctl is a toolset",
-		Long:  "permctl is a toolset for uniperm module, see https://github.com/rwscode/uniperm",
+		Long:  "permctl is a toolset for uniperm module, see https://github.com/go-the-way/uniperm",
 	}
 )

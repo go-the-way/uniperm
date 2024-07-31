@@ -12,7 +12,7 @@
 package db
 
 import (
-	"github.com/rwscode/uniperm/models"
+	"github.com/go-the-way/uniperm/models"
 	"gorm.io/gorm"
 )
 

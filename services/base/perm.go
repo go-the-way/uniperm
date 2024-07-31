@@ -12,8 +12,8 @@
 package base
 
 import (
-	"github.com/rwscode/uniperm/deps/db"
-	"github.com/rwscode/uniperm/models"
+	"github.com/go-the-way/uniperm/deps/db"
+	"github.com/go-the-way/uniperm/models"
 )
 
 type (

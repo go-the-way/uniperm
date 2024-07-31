@@ -11,7 +11,7 @@
 
 package role
 
-import "github.com/rwscode/uniperm/services/base"
+import "github.com/go-the-way/uniperm/services/base"
 
 type (
 	GetPageReq struct {

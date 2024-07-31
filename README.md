@@ -3,7 +3,7 @@ The unified permission package
 
 # Install permctl
 ```
-go install github.com/rwscode/uniperm/cmd/permctl@latest
+go install github.com/go-the-way/uniperm/cmd/permctl@latest
 ```
 
 # Services

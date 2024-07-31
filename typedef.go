@@ -12,9 +12,9 @@
 package uniperm
 
 import (
-	"github.com/rwscode/uniperm/services/permission"
-	"github.com/rwscode/uniperm/services/role"
-	"github.com/rwscode/uniperm/services/user"
+	"github.com/go-the-way/uniperm/services/permission"
+	"github.com/go-the-way/uniperm/services/role"
+	"github.com/go-the-way/uniperm/services/user"
 )
 
 type (

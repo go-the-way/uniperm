@@ -1,4 +1,4 @@
-module github.com/rwscode/uniperm
+module github.com/go-the-way/uniperm
 
 go 1.18
 

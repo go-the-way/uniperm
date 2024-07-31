@@ -11,7 +11,7 @@
 
 package user
 
-import "github.com/rwscode/uniperm/models"
+import "github.com/go-the-way/uniperm/models"
 
 type (
 	GetPageResp struct {

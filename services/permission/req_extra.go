@@ -12,8 +12,8 @@
 package permission
 
 import (
-	"github.com/rwscode/uniperm/models"
-	"github.com/rwscode/uniperm/services/base"
+	"github.com/go-the-way/uniperm/models"
+	"github.com/go-the-way/uniperm/services/base"
 )
 
 func (r *AddReq) Check() (err error) {
