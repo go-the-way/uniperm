@@ -11,11 +11,7 @@
 
 package user
 
-import (
-	"github.com/go-the-way/uniperm/internal/models"
-	"github.com/go-the-way/uniperm/internal/pkg"
-	"github.com/go-the-way/uniperm/internal/services/base"
-)
+import "github.com/go-the-way/uniperm/internal/services/base"
 
 func (req *AddReq) Check() (err error) {
 	return base.CheckAll(
@@ -50,32 +46,3 @@ func (req *DeleteReq) Check() (err error) {
 func (req *EnableReq) Check() (err error) { return (&DeleteReq{IdReq: IdReq{req.Id}}).Check() }
 
 func (req *DisableReq) Check() (err error) { return (&DeleteReq{IdReq: IdReq{req.Id}}).Check() }
-
-func (req *AddReq) transform() *models.User {
-	return &models.User{
-		Username:    req.Username,
-		Password:    pkg.MD5(req.Password),
-		BusinessId1: req.BusinessId1,
-		BusinessId2: req.BusinessId2,
-		BusinessId3: req.BusinessId3,
-		RoleId:      req.RoleId,
-		State:       models.RoleStateEnable,
-		Remark1:     req.Remark1,
-		Remark2:     req.Remark2,
-		Remark3:     req.Remark3,
-		CreateTime:  pkg.TimeNowStr(),
-		UpdateTime:  pkg.TimeNowStr(),
-	}
-}
-
-func (req *UpdateReq) transform() map[string]any {
-	return map[string]any{
-		"business_id1": req.BusinessId1,
-		"business_id2": req.BusinessId2,
-		"business_id3": req.BusinessId3,
-		"remark1":      req.Remark1,
-		"remark2":      req.Remark2,
-		"remark3":      req.Remark3,
-		"update_time":  pkg.TimeNowStr(),
-	}
-}

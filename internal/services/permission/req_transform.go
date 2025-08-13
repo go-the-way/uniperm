@@ -13,25 +13,7 @@ package permission
 
 import (
 	"github.com/go-the-way/uniperm/internal/models"
-	"github.com/go-the-way/uniperm/internal/services/base"
 )
-
-func (req *AddReq) Check() (err error) {
-	if req.ParentId > 0 {
-		return base.CheckPermissionIsNotButton(req.ParentId)
-	}
-	return
-}
-
-func (req *UpdateReq) Check() (err error) { return base.CheckPermissionExist(req.Id) }
-
-func (req *DeleteReq) Check() (err error) {
-	return base.CheckAll(
-		func() (err error) { return base.CheckPermissionExist(req.Id) },
-		func() (err error) { return base.CheckPermissionHaveNoSubPerms(req.Id) },
-		func() (err error) { return base.CheckPermissionRefRole(req.Id) },
-	)
-}
 
 func (req *AddReq) transform() *models.Permission {
 	return &models.Permission{Name: req.Name, Route: req.Route, ParentId: req.ParentId, IsButton: req.IsButton}

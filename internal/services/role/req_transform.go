@@ -14,27 +14,7 @@ package role
 import (
 	"github.com/go-the-way/uniperm/internal/models"
 	"github.com/go-the-way/uniperm/internal/pkg"
-	"github.com/go-the-way/uniperm/internal/services/base"
 )
-
-func (req *AddReq) Check() (err error) { return }
-
-func (req *UpdateReq) Check() (err error) { return base.CheckRoleExist(req.Id) }
-
-func (req *DeleteReq) Check() (err error) {
-	if err = base.CheckRoleExist(req.Id); err != nil {
-		return
-	}
-	if err = base.CheckRoleRefUser(req.Id); err != nil {
-		return
-	}
-	return base.CheckRoleRefPermission(req.Id)
-}
-
-func (req *EnableReq) Check() (err error)     { return base.CheckRoleExist(req.Id) }
-func (req *DisableReq) Check() (err error)    { return base.CheckRoleExist(req.Id) }
-func (req *GetPermReq) Check() (err error)    { return base.CheckRoleExist(req.Id) }
-func (req *UpdatePermReq) Check() (err error) { return base.CheckRoleExist(req.Id) }
 
 func (req *AddReq) transform() *models.Role {
 	return &models.Role{
