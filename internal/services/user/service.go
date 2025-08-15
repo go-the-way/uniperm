@@ -108,10 +108,12 @@ func (s *service) GetPerm(req GetPermReq) (resp GetPermResp, err error) {
 		return
 	}
 	resp.SuperAdmin = req.SuperAdmin()
-	resp.Routes = make([]GetPermRespRoute, 0)
 	for _, p := range ps {
 		if p.ParentId == 0 && p.IsButton == models.PermissionIsButtonNo && (req.SuperAdmin() || checkedMap[p.Id]) {
 			resp.Routes = append(resp.Routes, GetPermRespRoute{Id: p.Id, Path: p.Route, Children: s.children(p.Id, checkedMap, ps, req.SuperAdmin())})
+		}
+		if _, ok := checkedMap[p.Id]; (ok || req.SuperAdmin()) && p.IsButton == models.PermissionIsButtonNo {
+			resp.Paths = append(resp.Paths, p.Route)
 		}
 	}
 	return

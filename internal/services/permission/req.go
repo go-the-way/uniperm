@@ -16,7 +16,7 @@ import "github.com/go-the-way/unilog"
 type (
 	TreeReq struct{ PermissionId []uint }
 	IdReq   struct {
-		Id uint `validate:"min(1,权限Id能为空)" json:"id" log:"权限Id"`
+		Id uint `validate:"min(1,权限Id不能为空)" json:"id" log:"权限Id"`
 	}
 	GetReq IdReq
 	AddReq struct {

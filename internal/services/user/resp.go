@@ -22,6 +22,7 @@ type (
 	GetPermResp struct {
 		SuperAdmin bool               `json:"super_admin"` // 超级管理员
 		Routes     []GetPermRespRoute `json:"routes,omitempty"`
+		Paths      []string           `json:"paths,omitempty"`
 	}
 	GetPermRespRoute struct {
 		Id       uint               `json:"id"`
