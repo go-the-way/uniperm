@@ -57,23 +57,23 @@ func (s *service) Get(req GetReq) (resp GetResp, err error) {
 }
 
 func (s *service) Add(req AddReq) error {
-	return base.Callback1(db.GetDB().Create(req.transform()).Error, &req, unilog.Callback[*AddReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(db.GetDB().Create(req.transform()).Error, &req, unilog.Callback[*AddReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) Update(req UpdateReq) (err error) {
-	return base.Callback1(db.GetDB().Model(&models.Role{Id: req.Id}).Updates(req.transform()).Error, &req, unilog.Callback[*UpdateReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(db.GetDB().Model(&models.Role{Id: req.Id}).Updates(req.transform()).Error, &req, unilog.Callback[*UpdateReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) Delete(req DeleteReq) (err error) {
-	return base.Callback1(db.GetDB().Delete(&models.Role{Id: req.Id}).Error, &req, unilog.Callback[*DeleteReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(db.GetDB().Delete(&models.Role{Id: req.Id}).Error, &req, unilog.Callback[*DeleteReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) Enable(req EnableReq) (err error) {
-	return base.Callback1(s.updateState(req.Id, models.RoleStateEnable), &req, unilog.Callback[*EnableReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(s.updateState(req.Id, models.RoleStateEnable), &req, unilog.Callback[*EnableReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) Disable(req DisableReq) (err error) {
-	return base.Callback1(s.updateState(req.Id, models.RoleStateDisable), &req, unilog.Callback[*DisableReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(s.updateState(req.Id, models.RoleStateDisable), &req, unilog.Callback[*DisableReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) updateState(id uint, state byte) (err error) {
@@ -114,5 +114,5 @@ func (s *service) UpdatePerm(req UpdatePermReq) (err error) {
 		return
 	}
 	_ = tx.Commit().Error
-	return base.Callback1(err, &req, unilog.Callback[*UpdatePermReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(err, &req, unilog.Callback[*UpdatePermReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }

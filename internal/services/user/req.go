@@ -82,7 +82,7 @@ type (
 	}
 	UpdateRoleReq struct {
 		IdReq  `validate:"valid(T)"`
-		RoleId uint `validate:"min(1,角色id不能为空)" json:"role_id"` // 角色id
+		RoleId uint `validate:"min(1,角色id不能为空)" json:"role_id" log:"角色Id"` // 角色id
 		unilog.UC
 		Callback func(req UpdateRoleReq)
 	}

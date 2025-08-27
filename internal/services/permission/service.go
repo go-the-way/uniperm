@@ -29,13 +29,13 @@ func (s *service) Get(req GetReq) (resp GetResp, err error) {
 }
 
 func (s *service) Add(req AddReq) (err error) {
-	return base.Callback1(db.GetDB().Create(req.transform()).Error, &req, unilog.Callback[*AddReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(db.GetDB().Create(req.transform()).Error, &req, unilog.Callback[*AddReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) Update(req UpdateReq) (err error) {
-	return base.Callback1(db.GetDB().Model(&models.Permission{Id: req.Id}).Updates(req.transform()).Error, &req, unilog.Callback[*UpdateReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(db.GetDB().Model(&models.Permission{Id: req.Id}).Updates(req.transform()).Error, &req, unilog.Callback[*UpdateReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
 
 func (s *service) Delete(req DeleteReq) (err error) {
-	return base.Callback1(db.GetDB().Delete(&models.Permission{Id: req.Id}).Error, &req, unilog.Callback[*DeleteReq](), base.TransformCallback(&req, req.Callback))
+	return base.Callback1(db.GetDB().Delete(&models.Permission{Id: req.Id}).Error, &req, unilog.Callback[*DeleteReq](unilog.Type1Admin()), base.TransformCallback(&req, req.Callback))
 }
