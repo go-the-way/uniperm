@@ -11,6 +11,7 @@
 
 package base
 
+// Callback1 executes a series of callback functions with a single parameter if no initial error is present.
 func Callback1[T any](err0 error, t T, fns ...func(t T)) (err error) {
 	if err = err0; err != nil {
 		return
@@ -23,6 +24,7 @@ func Callback1[T any](err0 error, t T, fns ...func(t T)) (err error) {
 	return
 }
 
+// Callback2 executes a series of callback functions with two parameters if no initial error is present.
 func Callback2[T1, T2 any](err0 error, t1 T1, t2 T2, fns ...func(t1 T1, t2 T2)) (err error) {
 	if err = err0; err != nil {
 		return
@@ -35,6 +37,7 @@ func Callback2[T1, T2 any](err0 error, t1 T1, t2 T2, fns ...func(t1 T1, t2 T2)) 
 	return
 }
 
+// Callback3 executes a series of callback functions with three parameters if no initial error is present.
 func Callback3[T1, T2, T3 any](err0 error, t1 T1, t2 T2, t3 T3, fns ...func(t1 T1, t2 T2, t3 T3)) (err error) {
 	if err = err0; err != nil {
 		return
@@ -47,6 +50,7 @@ func Callback3[T1, T2, T3 any](err0 error, t1 T1, t2 T2, t3 T3, fns ...func(t1 T
 	return
 }
 
+// Callback1Err executes a series of callback functions with a single parameter that may return an error, stopping on the first error encountered.
 func Callback1Err[T any](err0 error, t T, fns ...func(t T) (err error)) (err error) {
 	if err = err0; err != nil {
 		return
@@ -61,6 +65,7 @@ func Callback1Err[T any](err0 error, t T, fns ...func(t T) (err error)) (err err
 	return
 }
 
+// TransformCallback converts a callback function that takes a value into one that takes a pointer to that value.
 func TransformCallback[T any](t *T, callback func(t T)) func(ptr *T) {
 	if callback == nil {
 		return nil
@@ -68,4 +73,7 @@ func TransformCallback[T any](t *T, callback func(t T)) func(ptr *T) {
 	return func(ptr *T) { callback(*t) }
 }
 
-func Return[T any](t T, err0 error) (T, error) { return t, err0 }
+// Return wraps a value and an error into a tuple for consistent return handling.
+func Return[T any](t T, err0 error) (T, error) {
+	return t, err0
+}

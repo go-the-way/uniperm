@@ -22,6 +22,8 @@ import (
 	"github.com/go-the-way/uniperm/internal/services/base"
 )
 
+var _ svc = (*service)(nil)
+
 type service struct{}
 
 func (s *service) GetPage(req GetPageReq) (resp GetPageResp, err error) {

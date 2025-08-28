@@ -19,6 +19,7 @@ import (
 	"github.com/go-the-way/uniperm/internal/models"
 )
 
+// CheckAll executes a series of check functions and returns the first error encountered.
 func CheckAll(fns ...func() (err error)) (err error) {
 	for _, fn := range fns {
 		if fn != nil {
@@ -30,79 +31,87 @@ func CheckAll(fns ...func() (err error)) (err error) {
 	return
 }
 
+// CheckUsernameExists verifies if a username already exists in the database.
 func CheckUsernameExists(username string) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.User)).Where("username=?", username).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc > 0 {
-		return errors.New(fmt.Sprintf("用户[%s]已存在", username))
+		return errors.New(fmt.Sprintf("User [%s] already exists", username))
 	}
 	return
 }
 
+// CheckUserExists checks if a user with the specified ID exists in the database.
 func CheckUserExists(userId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.User)).Where("id=?", userId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc <= 0 {
-		return errors.New(fmt.Sprintf("用户[%d]不存在", userId))
+		return errors.New(fmt.Sprintf("User [%d] does not exist", userId))
 	}
 	return
 }
 
+// CheckUserIsSuper ensures the user is not a super admin (user ID 1).
 func CheckUserIsSuper(userId uint) (err error) {
 	if userId == 1 {
-		return errors.New("超级管理员不支持当前操作")
+		return errors.New("super admin does not support this operation")
 	}
 	return
 }
 
+// CheckRoleExist verifies if a role with the specified ID exists in the database.
 func CheckRoleExist(roleId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.Role)).Where("id=?", roleId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc <= 0 {
-		return errors.New(fmt.Sprintf("角色[%d]不存在", roleId))
+		return errors.New(fmt.Sprintf("Role [%d] does not exist", roleId))
 	}
 	return
 }
 
+// CheckRoleRefUser checks if the specified role is referenced by any users.
 func CheckRoleRefUser(roleId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.User)).Where("role_id=?", roleId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc > 0 {
-		return errors.New(fmt.Sprintf("角色[%d]下有用户", roleId))
+		return errors.New(fmt.Sprintf("Role [%d] is referenced by users", roleId))
 	}
 	return
 }
 
+// CheckRoleRefPermission checks if the specified role is associated with any permissions.
 func CheckRoleRefPermission(roleId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.RolePermission)).Where("role_id=?", roleId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc > 0 {
-		return errors.New(fmt.Sprintf("角色[%d]下有关联权限", roleId))
+		return errors.New(fmt.Sprintf("Role [%d] is associated with permissions", roleId))
 	}
 	return
 }
 
+// CheckPermissionExist verifies if a permission with the specified ID exists in the database.
 func CheckPermissionExist(permissionId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.Permission)).Where("id=?", permissionId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc <= 0 {
-		return errors.New(fmt.Sprintf("权限[%d]不存在", permissionId))
+		return errors.New(fmt.Sprintf("Permission [%d] does not exist", permissionId))
 	}
 	return
 }
 
+// CheckPermissionIsNotButton ensures the specified permission is not a button-type permission.
 func CheckPermissionIsNotButton(permissionId uint) (err error) {
 	type perm struct {
 		Id       uint
@@ -113,32 +122,34 @@ func CheckPermissionIsNotButton(permissionId uint) (err error) {
 		return
 	}
 	if pm.Id <= 0 {
-		return errors.New(fmt.Sprintf("权限[%d]不存在", permissionId))
+		return errors.New(fmt.Sprintf("Permission [%d] does not exist", permissionId))
 	}
 	if pm.IsButton == models.PermissionIsButtonYes {
-		return errors.New(fmt.Sprintf("权限[%d]是按钮权限", permissionId))
+		return errors.New(fmt.Sprintf("Permission [%d] is a button permission", permissionId))
 	}
 	return
 }
 
+// CheckPermissionHaveNoSubPerms checks if the specified permission has no sub-permissions.
 func CheckPermissionHaveNoSubPerms(permissionId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.Permission)).Where("parent_id=?", permissionId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc > 0 {
-		return errors.New(fmt.Sprintf("权限[%d]有下级权限[数量:%d]", permissionId, cc))
+		return errors.New(fmt.Sprintf("Permission [%d] has sub-permissions [count: %d]", permissionId, cc))
 	}
 	return
 }
 
+// CheckPermissionRefRole checks if the specified permission is referenced by any roles.
 func CheckPermissionRefRole(permissionId uint) (err error) {
 	var cc int64
 	if err = db.GetDB().Model(new(models.RolePermission)).Where("permission_id=?", permissionId).Count(&cc).Error; err != nil {
 		return
 	}
 	if cc > 0 {
-		return errors.New(fmt.Sprintf("权限[%d]有角色引用[数量:%d]", permissionId, cc))
+		return errors.New(fmt.Sprintf("Permission [%d] is referenced by roles [count: %d]", permissionId, cc))
 	}
 	return
 }

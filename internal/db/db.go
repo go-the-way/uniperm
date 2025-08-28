@@ -16,6 +16,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// PaginationFunc defines a function type for handling pagination in database queries.
 type PaginationFunc func(db *gorm.DB, page, limit int, count *int64, list any) (err error)
 
 var (
@@ -23,11 +24,19 @@ var (
 	pageFunc PaginationFunc
 )
 
-func SetDB(db *gorm.DB)                           { gdb = db }
-func GetDB() *gorm.DB                             { return gdb }
-func SetPagination(paginationFunc PaginationFunc) { pageFunc = paginationFunc }
-func GetPagination() PaginationFunc               { return pageFunc }
+// SetDB sets the global database instance.
+func SetDB(db *gorm.DB) { gdb = db }
 
+// GetDB retrieves the global database instance.
+func GetDB() *gorm.DB { return gdb }
+
+// SetPagination sets the pagination function for database queries.
+func SetPagination(paginationFunc PaginationFunc) { pageFunc = paginationFunc }
+
+// GetPagination retrieves the pagination function.
+func GetPagination() PaginationFunc { return pageFunc }
+
+// AutoMigrate automatically migrates the database schema for the specified models.
 func AutoMigrate() (err error) {
 	return gdb.AutoMigrate(
 		new(models.User),

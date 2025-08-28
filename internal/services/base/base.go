@@ -11,7 +11,8 @@
 
 package base
 
+// PageReq represents a request structure for pagination parameters.
 type PageReq struct {
-	Page  int `form:"page"`
-	Limit int `form:"limit"`
+	Page  int `form:"page"`  // Page specifies the current page number for pagination.
+	Limit int `form:"limit"` // Limit specifies the number of items per page.
 }

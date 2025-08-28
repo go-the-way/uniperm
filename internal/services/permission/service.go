@@ -18,6 +18,8 @@ import (
 	"github.com/go-the-way/uniperm/internal/services/base"
 )
 
+var _ svc = (*service)(nil)
+
 type service struct{}
 
 func (s *service) Tree(req TreeReq) (resp TreeResp, err error) {
