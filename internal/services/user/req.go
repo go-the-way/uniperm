@@ -52,10 +52,10 @@ type (
 	}
 	AddReq struct {
 		Username    string `validate:"minlength(1,用户名不能为空) maxlength(20,用户名长度不能超过20)" json:"username" log:"用户名"` // 用户名
-		Password    string `validate:"minlength(1,密码不能为空) maxlength(20,密码长度不能超过20)" json:"password" log:"密码"`    // 密码
-		BusinessId1 string `validate:"maxlength(50,业务id1长度不能超过50)" json:"business_id1" json:"业务Id1"`             // 业务id1
-		BusinessId2 string `validate:"maxlength(50,业务id2长度不能超过50)" json:"business_id2" json:"业务Id2"`             // 业务id2
-		BusinessId3 string `validate:"maxlength(50,业务id3长度不能超过50)" json:"business_id3" json:"业务Id3"`             // 业务id3
+		Password    string `validate:"minlength(1,密码不能为空) maxlength(20,密码长度不能超过20)" json:"password" log:"-"`     // 密码
+		BusinessId1 string `validate:"maxlength(50,业务id1长度不能超过50)" json:"business_id1" log:"业务Id1"`              // 业务id1
+		BusinessId2 string `validate:"maxlength(50,业务id2长度不能超过50)" json:"business_id2" log:"业务Id2"`              // 业务id2
+		BusinessId3 string `validate:"maxlength(50,业务id3长度不能超过50)" json:"business_id3" log:"业务Id3"`              // 业务id3
 		RoleId      uint   `json:"role_id" log:"角色Id"`                                                           // 角色id
 		Remark1     string `validate:"maxlength(200,备注1长度不能超过200)" json:"remark1" log:"备注1"`                     // 备注1
 		Remark2     string `validate:"maxlength(200,备注2长度不能超过200)" json:"remark2" log:"备注2"`                     // 备注2
@@ -65,12 +65,12 @@ type (
 	}
 	UpdateReq struct {
 		IdReq       `validate:"valid(T)"`
-		BusinessId1 string `validate:"maxlength(50,业务id1长度不能超过50)" json:"business_id1" json:"业务Id1"` // 业务id1
-		BusinessId2 string `validate:"maxlength(50,业务id2长度不能超过50)" json:"business_id2" json:"业务Id2"` // 业务id2
-		BusinessId3 string `validate:"maxlength(50,业务id3长度不能超过50)" json:"business_id3" json:"业务Id3"` // 业务id3
-		Remark1     string `validate:"maxlength(200,备注1长度不能超过200)" json:"remark1" log:"备注1"`         // 备注1
-		Remark2     string `validate:"maxlength(200,备注2长度不能超过200)" json:"remark2" log:"备注2"`         // 备注2
-		Remark3     string `validate:"maxlength(200,备注3长度不能超过200)" json:"remark3" log:"备注3"`         // 备注3
+		BusinessId1 string `validate:"maxlength(50,业务id1长度不能超过50)" json:"business_id1" log:"业务Id1"` // 业务id1
+		BusinessId2 string `validate:"maxlength(50,业务id2长度不能超过50)" json:"business_id2" log:"业务Id2"` // 业务id2
+		BusinessId3 string `validate:"maxlength(50,业务id3长度不能超过50)" json:"business_id3" log:"业务Id3"` // 业务id3
+		Remark1     string `validate:"maxlength(200,备注1长度不能超过200)" json:"remark1" log:"备注1"`        // 备注1
+		Remark2     string `validate:"maxlength(200,备注2长度不能超过200)" json:"remark2" log:"备注2"`        // 备注2
+		Remark3     string `validate:"maxlength(200,备注3长度不能超过200)" json:"remark3" log:"备注3"`        // 备注3
 		unilog.UC
 		Callback func(req UpdateReq)
 	}
